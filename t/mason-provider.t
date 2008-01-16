@@ -12,7 +12,7 @@ $tmp->touch('mason.html', 'Hello, <% $world %>!');
 
 my $ctx = App::TemplateServer::Context->new( data => { world => 'world' } );
 my $provider = App::TemplateServer::Provider::Mason->new(docroot => ["$tmp"]);
-is_deeply [sort qw/mason.html/], [sort $provider->list_templates],
+is_deeply [sort $provider->list_templates], [sort qw/mason.html/],
   'got all expected templates via list_templates';
 
 sub is_rendered($$) { 

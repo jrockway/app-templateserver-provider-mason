@@ -4,41 +4,26 @@ use Method::Signatures;
 use File::Find;
 use HTML::Mason::Interp;
 use Path::Class qw(file);
+use feature ':5.10';
 
-with 'App::TemplateServer::Provider';
-
-method list_templates {
-    my $docroot = $self->docroot;
-    
-    my @files;
-    find(sub { 
-             my $name = $File::Find::name;
-             push @files, File::Spec->abs2rel($name, $docroot) 
-               if -f $name;
-         },
-         $docroot);
-    
-    return @files;
-};
+with 'App::TemplateServer::Provider::Filesystem';
 
 method render_template($template, $context){
     my $outbuf;
     
     my %data = %{$context->data||{}};
     my @globals = map { "\$$_" } keys %data;
-
+    
     my $interp = HTML::Mason::Interp->new(
-        comp_root     => q{}.$self->docroot,
+        comp_root     => [map {state $a = 1; [$a++ => "$_"]} $self->docroot],
         out_method    => \$outbuf,
-        allow_globals => \@globals
-          
+        allow_globals => \@globals,
     );
     
     # set globals
     for my $var (keys %data){
         my $val  = $data{$var};
         $interp->set_global($var, $val);
-        warn qq{adding "$var => $val"};
     }
     
     $interp->exec("/$template");

@@ -6,6 +6,8 @@ use HTML::Mason::Interp;
 use Path::Class qw(file);
 use feature ':5.10';
 
+our $VERSION = '0.01';
+
 with 'App::TemplateServer::Provider::Filesystem';
 
 method render_template($template, $context){
@@ -37,4 +39,19 @@ __END__
 =head1 NAME
 
 App::TemplateServer::Provider::Mason - serve Mason templates with App::TemplateServer
+
+=head1 SYNOPSIS
+
+Use Mason templates with L<App::TemplateServer|App::TemplateServer>.
+
+   template-server --provider Mason --docroot /mason/templates
+
+See L<template-server> and <App::TemplateServer> for details.
+
+=head1 AUTHOR AND COPYRIGHT
+
+Jonathan Rockway C<< <jrockway@cpan.org> >>
+
+This module is Free software, you may redistribute it under the same
+terms as Perl itself.
 
